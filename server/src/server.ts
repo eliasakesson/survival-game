@@ -22,8 +22,7 @@ io.on("connection", (socket: Socket) => {
 server.listen(3000, () => {
 	console.log("Server listening on port 3000")
 })
-
-console.log("Server Started Successfully!")
+console.log("Server activated!")
 
 type Session = {
 	uuid: string
