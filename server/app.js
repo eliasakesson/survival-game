@@ -1,12 +1,17 @@
 import express from "express"
 import http from "http"
-import { Server, Socket } from "socket.io"
+import { Server } from "socket.io"
+
+import { Gravity } from "../client/common/Constants.js"
+console.log("Server: " + Gravity)
 
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server)
 
-io.on("connection", (socket: Socket) => {
+app.use(express.static("client"))
+
+io.on("connection", (socket) => {
 	console.log("A user connected")
 
 	socket.on("message", (data) => {
@@ -23,8 +28,3 @@ server.listen(3000, () => {
 	console.log("Server listening on port 3000")
 })
 console.log("Server activated!")
-
-type Session = {
-	uuid: string
-}
-const Sessions: Session[] = []
