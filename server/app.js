@@ -1,6 +1,10 @@
 import express from "express"
 import http from "http"
 import { Server } from "socket.io"
+import * as Database from "./Database.js"
+
+console.warn(`Random UUID: ${Database.GenerateUUID()}`)
+console.log(Database.GetUserData("EHGMQU"))
 
 import { Gravity } from "../client/common/Constants.js"
 console.log("Server: " + Gravity)
