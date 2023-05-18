@@ -1,7 +1,10 @@
-import GameObject from "./GameObject.js";
-import { Gravity } from "./Constants.js";
+import GameObject from "./GameObject.js"
+import { Gravity } from "./Constants.js"
 
 export default class PhysicsObject extends GameObject {
+	velocity: any
+
+	/*
 	constructor() {
 		super(...arguments)
 
@@ -18,4 +21,5 @@ export default class PhysicsObject extends GameObject {
 
 		super.Update()
 	}
+	*/
 }

@@ -1,4 +1,6 @@
 export default class PhysicsWorld {
+	objects: any
+
 	constructor() {
 		this.objects = []
 	}

@@ -1,18 +1,11 @@
 import express from "express"
-import http from "http"
 import { Server } from "socket.io"
-import * as Database from "./Database.js"
+//import * as Database from "./Database"
 import * as path from "path"
 import cors from "cors"
 
-//const app = express()
-//const server = http.createServer(app)
-//const io = new Server(server)
-
-// Setup app
-//app.use(express.static("client"))
-
-// Listen to port
+//import { Gravity } from "../../shared/Constants"
+//console.log(Gravity)
 
 const app = express()
 const port = 3001
@@ -21,8 +14,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cors())
 
-app.get(`/`, cors(), (req, res) => {
-	res.send("Server is working")
+app.get(`/`, (req, res) => {
+	res.send(`Server running on port ${port}`)
 })
 
 app.post("/post_name", (req, res) => {
@@ -49,7 +42,4 @@ io.on("connection", (socket) => {
 
 console.warn(`Random UUID: ${Database.GenerateUUID()}`)
 console.log(Database.GetUserData("EHGMQU"))
-
-import { Gravity } from "../client/common/Constants.js"
-console.log("Server: " + Gravity)
 */

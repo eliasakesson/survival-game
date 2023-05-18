@@ -1,6 +1,7 @@
-import PhysicsObject from "./PhysicsObject";
+import PhysicsObject from "./PhysicsObject"
 
-export default class Player extends PhysicsObject{
+export default class Player extends PhysicsObject {
+	/*
     constructor(){
         super(...arguments)
 
@@ -10,4 +11,5 @@ export default class Player extends PhysicsObject{
     Update(deltaTime){
         super.Update(deltaTime)
     }
+	*/
 }

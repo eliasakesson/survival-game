@@ -2,9 +2,10 @@ import * as fs from "fs"
 import * as path from "path"
 import { v4 as uuidv4 } from "uuid"
 
-const workspace = path.join(import.meta.url, "..", "..").replace("file:\\C", "c") // weird replacement of __dirname
+//const workspace = path.join(import.meta.url, "..", "..").replace("file:\\C", "c") // weird replacement of __dirname
+const workspace = ""
 
-function get(category, name) {
+function get(category: "worlds" | "users", name: string) {
 	try {
 		const pathToFile = path.join(workspace, "storage", category, name)
 		const content = fs.readFileSync(pathToFile, "utf-8")
@@ -14,33 +15,33 @@ function get(category, name) {
 		console.warn(`Getting ${name} from ${category} failed: ${err.toString()}`)
 	}
 }
-function write(category, name, data) {
+function write(category: "worlds" | "users", name: string, data: any) {
 	try {
 		const pathToFile = path.join(workspace, "storage", category, name)
 		const json = JSON.stringify(data)
 		if (!json) return
-		fs.writeSync(pathToFile, json, "utf-8")
+		fs.writeFileSync(pathToFile, json, "utf-8")
 		return true
 	} catch (err) {
-		console.warn(`Writing ${uuid} in ${category} failed: ${err.toString()}`)
+		console.warn(`Writing ${name} in ${category} failed: ${err.toString()}`)
 	}
 	return false
 }
 
 // User API
-export function GetUserData(uuid) {
+export function GetUserData(uuid: string) {
 	return get("users", uuid + ".json")
 }
-export function WriteUserData(uuid, data) {
+export function WriteUserData(uuid: string, data: any) {
 	return write("users", uuid + ".json", data)
 }
 
 // World API
-export function GetWorldData(uuid) {
+export function GetWorldData(uuid: string) {
 	return get("worlds", uuid + ".json")
 }
 
-export function WriteWorldData(uuid, data) {
+export function WriteWorldData(uuid: string, data: any) {
 	return write("worlds", uuid + ".json", data)
 }
 

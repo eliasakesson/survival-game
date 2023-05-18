@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"target": "es2020",
+		"module": "commonjs",
+		"outDir": "out",
+		"esModuleInterop": true,
+
+		"baseUrl": ".",
+		"paths": {
+			"@shared/*": ["../../shared/*"]
+		},
+		"rootDirs": ["./src", "../../shared"]
+	}
+}
