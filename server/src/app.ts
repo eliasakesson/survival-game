@@ -1,30 +1,30 @@
-import express from "express"
-import { Server } from "socket.io"
+import express from "express";
+import { Server } from "socket.io";
 //import * as Database from "./Database"
-import * as path from "path"
-import cors from "cors"
+import * as path from "path";
+import cors from "cors";
 
 //import { Gravity } from "../../shared/Constants"
 //console.log(Gravity)
 
-const app = express()
-const port = 3001
+const app = express();
+const port = 3001;
 
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-app.use(cors())
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors());
 
 app.get(`/`, (req, res) => {
-	res.send(`Server running on port ${port}`)
-})
+	res.send(`Server running on port ${port}`);
+});
 
 app.post("/post_name", (req, res) => {
-	console.log(req.body)
-})
+	console.log(req.body);
+});
 
 app.listen(port, () => {
-	console.log(`Server running on port ${port}`)
-})
+	console.log(`Server running on port ${port}`);
+});
 
 /* Socket
 io.on("connection", (socket) => {

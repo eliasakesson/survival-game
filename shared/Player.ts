@@ -1,4 +1,4 @@
-import PhysicsObject from "./PhysicsObject"
+import PhysicsObject from "./PhysicsObject";
 
 export default class Player extends PhysicsObject {
 	/*

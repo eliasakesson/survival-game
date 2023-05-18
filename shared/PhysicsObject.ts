@@ -1,8 +1,8 @@
-import GameObject from "./GameObject.js"
-import { Gravity } from "./Constants.js"
+import GameObject from "./GameObject.js";
+import { Gravity } from "./Constants.js";
 
 export default class PhysicsObject extends GameObject {
-	velocity: any
+	velocity: any;
 
 	/*
 	constructor() {
