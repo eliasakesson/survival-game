@@ -29,19 +29,19 @@ function write(category, name, data) {
 
 // User API
 export function GetUserData(uuid) {
-	return get("users", uuid)
+	return get("users", uuid + ".json")
 }
 export function WriteUserData(uuid, data) {
-	return write("users", uuid, data)
+	return write("users", uuid + ".json", data)
 }
 
 // World API
 export function GetWorldData(uuid) {
-	return get("worlds", uuid)
+	return get("worlds", uuid + ".json")
 }
 
 export function WriteWorldData(uuid, data) {
-	return write("worlds", uuid, data)
+	return write("worlds", uuid + ".json", data)
 }
 
 // Utilities
