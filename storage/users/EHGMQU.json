@@ -2,5 +2,6 @@
 	"name": "Ezzenix",
 	"email": "anton.lampinen@gmail.com",
 	"password": "hello_man",
+	"authentication_token": false,
 	"worlds": ["GUWERRGEWR"]
 }
