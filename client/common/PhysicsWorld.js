@@ -1,9 +1,15 @@
-import { PhysicsObject } from "./PhysicsObject"
-
-export class PhysicsWorld {
+export default class PhysicsWorld {
 	constructor() {
 		this.objects = []
 	}
 
-	update(deltaTime) {}
+	Update(deltaTime) {
+		this.objects.forEach((obj) => {
+			obj.Update(deltaTime)
+		})
+	}
+
+	AddObject(obj) {
+		this.objects.push(obj)
+	}
 }
