@@ -1,3 +1,28 @@
+import "./App.css"
+//import * as react from "react"
+import axios from "axios"
+
+function App() {
+	async function clicked(e) {
+		console.log("clicked button")
+
+		try {
+			await axios.post("http://localhost:3001/post_name", {
+				Cool: true,
+			})
+		} catch (err) {
+			console.warn(err)
+		}
+	}
+
+	return (
+		<div className="App">
+			<button onClick={clicked}>Send Data</button>
+		</div>
+	)
+}
+
+/*
 console.log("CLIENT ACTIVATED")
 
 import Player from "./common/Player.js"
@@ -26,3 +51,6 @@ function Update(time){
 }
 
 Start()
+*/
+
+export default App

@@ -2,19 +2,38 @@ import express from "express"
 import http from "http"
 import { Server } from "socket.io"
 import * as Database from "./Database.js"
+import * as path from "path"
+import cors from "cors"
 
-console.warn(`Random UUID: ${Database.GenerateUUID()}`)
-console.log(Database.GetUserData("EHGMQU"))
+//const app = express()
+//const server = http.createServer(app)
+//const io = new Server(server)
 
-import { Gravity } from "../client/common/Constants.js"
-console.log("Server: " + Gravity)
+// Setup app
+//app.use(express.static("client"))
+
+// Listen to port
 
 const app = express()
-const server = http.createServer(app)
-const io = new Server(server)
+const port = 3001
 
-app.use(express.static("client"))
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(cors())
 
+app.get(`/`, cors(), (req, res) => {
+	res.send("Server is working")
+})
+
+app.post("/post_name", (req, res) => {
+	console.log(req.body)
+})
+
+app.listen(port, () => {
+	console.log(`Server running on port ${port}`)
+})
+
+/* Socket
 io.on("connection", (socket) => {
 	console.log("A user connected")
 
@@ -28,7 +47,9 @@ io.on("connection", (socket) => {
 	})
 })
 
-server.listen(3000, () => {
-	console.log("Server listening on port 3000")
-})
-console.log("Server activated!")
+console.warn(`Random UUID: ${Database.GenerateUUID()}`)
+console.log(Database.GetUserData("EHGMQU"))
+
+import { Gravity } from "../client/common/Constants.js"
+console.log("Server: " + Gravity)
+*/
