@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { StartScreen } from "./pages";
+import { StartScreen, LoginScreen, GameScreen } from "./pages";
 
 function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<StartScreen />} />
-				<Route path="/signin" element={<h1>Sign In</h1>} />
+				<Route path="/signin" element={<LoginScreen />} />
 				<Route path="/menu" element={<h1>Menu</h1>} />
-				<Route path="/game" element={<h1>Game</h1>} />
+				<Route path="/game" element={<GameScreen />} />
 			</Routes>
 		</BrowserRouter>
 	);

@@ -1,3 +1,5 @@
-import StartScreen from "./StartScreen/StartScreen";
+import StartScreen from "./StartScreen";
+import LoginScreen from "./LoginScreen";
+import GameScreen from "./GameScreen";
 
-export { StartScreen };
+export { StartScreen, LoginScreen, GameScreen };
