@@ -1,17 +1,17 @@
 export default class PhysicsWorld {
-	objects: any;
+	private objects: any;
 
 	constructor() {
 		this.objects = [];
 	}
 
-	Update(deltaTime) {
+	public Update(deltaTime) {
 		this.objects.forEach((obj) => {
 			obj.Update(deltaTime);
 		});
 	}
 
-	AddObject(obj) {
+	public AddObject(obj) {
 		this.objects.push(obj);
 	}
 }

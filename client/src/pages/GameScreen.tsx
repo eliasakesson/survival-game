@@ -1,32 +1,23 @@
 import React, { useRef, useEffect, useState } from "react";
 import FullscreenCanvas from "../components/FullscreenCanvas";
-import WorldGenerator from "../../../shared/WorldGenerator";
+import Game from "../../../shared/Game";
 
 function GameScreen() {
-	const [world, setWorld] = useState(new WorldGenerator());
+	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const [game, setGame] = useState<Game | null>(null);
+	const gameStarted = useRef(false);
 
 	useEffect(() => {
-		const unsub = requestAnimationFrame(Update);
-		Start();
+		if (canvasRef.current && !gameStarted.current) {
+			const ctx = canvasRef.current.getContext("2d");
+			if (ctx) {
+				gameStarted.current = true;
+				setGame(new Game(ctx));
+			}
+		}
+	}, [canvasRef.current]);
 
-		return () => cancelAnimationFrame(unsub);
-	}, []);
-
-	function Start() {
-		const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-		const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-		world.Start(ctx);
-	}
-
-	const lastTimeRef = useRef<number>(0);
-	function Update(time: number) {
-		const deltaTime = time - lastTimeRef.current;
-		lastTimeRef.current = time;
-
-		requestAnimationFrame(Update);
-	}
-
-	return <FullscreenCanvas></FullscreenCanvas>;
+	return <FullscreenCanvas ref={canvasRef}></FullscreenCanvas>;
 }
 
 export default GameScreen;

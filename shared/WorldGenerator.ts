@@ -4,6 +4,7 @@ interface Chunk {
 	x: number;
 	y: number;
 	blocks: Block[];
+	walkableBlocks: Block[];
 }
 
 interface Block {
@@ -20,21 +21,18 @@ enum BlockType {
 }
 
 export default class WorldGenerator {
-	world: Chunk[];
+	private world: Chunk[];
 
 	constructor() {
 		this.world = [];
+		this.GenerateWorld();
 	}
 
-	Start(ctx: any) {
-		console.log("WorldGenerator started");
-		this.GenerateWorld();
+	public Update(ctx: CanvasRenderingContext2D) {
 		this.RenderWorld(ctx);
 	}
 
-	GenerateWorld() {
-		this.world = [];
-
+	private GenerateWorld() {
 		for (let chunkX = 0; chunkX < window.innerWidth; chunkX += ChunkSize) {
 			for (
 				let chunkY = 0;
@@ -45,30 +43,33 @@ export default class WorldGenerator {
 					x: chunkX,
 					y: chunkY,
 					blocks: [],
+					walkableBlocks: [],
 				};
 
 				for (let x = 0; x < ChunkSize; x += BlockSize) {
 					for (let y = 0; y < ChunkSize; y += BlockSize) {
-						const type = Math.floor(Math.random() * 4);
+						const blockType = this.GetBlockType(chunk, x, y);
 
 						const block: Block = {
 							x: x,
 							y: y,
-							type: type,
+							type: blockType,
 						};
 
 						chunk.blocks.push(block);
+
+						if (blockType === BlockType.Grass) {
+							chunk.walkableBlocks.push(block);
+						}
 					}
 				}
 
 				this.world.push(chunk);
 			}
 		}
-
-		console.log(this.world);
 	}
 
-	RenderWorld(ctx: any) {
+	private RenderWorld(ctx: any) {
 		for (const chunk of this.world) {
 			for (const block of chunk.blocks) {
 				ctx.fillStyle = this.ColorFromBlockType(block.type);
@@ -82,7 +83,19 @@ export default class WorldGenerator {
 		}
 	}
 
-	ColorFromBlockType(type: BlockType): string {
+	public GetCloseWalkableBlocks(x: number, y: number): Block[] {
+		const chunks = this.world.filter(
+			(c) =>
+				c.x - ChunkSize <= x &&
+				c.x + ChunkSize >= x &&
+				c.y - ChunkSize <= y &&
+				c.y + ChunkSize >= y
+		);
+
+		return chunks.map((chunk) => chunk.walkableBlocks).flat();
+	}
+
+	private ColorFromBlockType(type: BlockType): string {
 		switch (type) {
 			case BlockType.Air:
 				return "#ADD8E6";
@@ -94,4 +107,56 @@ export default class WorldGenerator {
 				return "#228B22";
 		}
 	}
+
+	private GetBlockType = (chunk: Chunk, x: number, y: number) => {
+		let blockAbove;
+		if (y > 0) {
+			blockAbove = chunk.blocks.find(
+				(b) => b.x === x && b.y === y - BlockSize
+			);
+		} else {
+			const aboveChunk = this.world.find(
+				(c) => c.x === chunk.x && c.y === chunk.y - ChunkSize
+			);
+			if (aboveChunk) {
+				blockAbove = aboveChunk.blocks.find(
+					(b) => b.x === x && b.y === ChunkSize - BlockSize
+				);
+			}
+		}
+
+		const rand = Math.random();
+
+		if (blockAbove) {
+			if (blockAbove.type === BlockType.Grass) {
+				return BlockType.Dirt;
+			}
+			if (blockAbove.type === BlockType.Air) {
+				const airChance =
+					((window.innerHeight / 2 - y) / window.innerHeight) * 5;
+
+				if (rand < airChance) {
+					return BlockType.Air;
+				}
+
+				return BlockType.Grass;
+			}
+			if (blockAbove.type === BlockType.Dirt) {
+				const dirtChance =
+					(((window.innerHeight * 2) / 3 - y) / window.innerHeight) *
+					3;
+
+				if (rand < dirtChance) {
+					return BlockType.Dirt;
+				}
+
+				return BlockType.Stone;
+			}
+			if (blockAbove.type === BlockType.Stone) {
+				return BlockType.Stone;
+			}
+		}
+
+		return BlockType.Air;
+	};
 }
