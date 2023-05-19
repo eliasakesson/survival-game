@@ -1,15 +1,14 @@
+import { BlockSize } from "./Constants";
 import PhysicsObject from "./PhysicsObject";
 
 export default class Player extends PhysicsObject {
-	/*
-    constructor(){
-        super(...arguments)
+	constructor(ctx) {
+		super(ctx);
 
-        this.size = { x: 100, y: 200 }
-    }
+		this.size = { x: BlockSize, y: BlockSize * 2 };
+	}
 
-    Update(deltaTime){
-        super.Update(deltaTime)
-    }
-	*/
+	Update(deltaTime) {
+		super.Update(deltaTime);
+	}
 }

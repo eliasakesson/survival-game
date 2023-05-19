@@ -1,27 +1,40 @@
+import { BlockSize } from "./Constants";
+
 export default class GameObject {
 	ctx: any;
 	position: any;
 	size: any;
 	sprite: any;
 
-	constructor(ctx, pos, size, sprite) {
+	constructor(ctx) {
 		this.ctx = ctx;
-		this.position = pos || { x: 0, y: 0 };
-		this.size = size || { x: 100, y: 100 };
-		this.sprite = sprite;
+
+		this.position = { x: 0, y: 0 };
+		this.size = { x: BlockSize, y: BlockSize };
 	}
 
-	Update() {
+	Update(deltaTime) {
 		// Update logic here
 		this.Draw(this.ctx);
 	}
 
 	Draw(ctx) {
 		if (this.sprite) {
-			ctx.drawImage(this.sprite, this.position.x, this.position.y, this.size.x, this.size.y);
+			ctx.drawImage(
+				this.sprite,
+				this.position.x,
+				this.position.y,
+				this.size.x,
+				this.size.y
+			);
 		} else {
 			ctx.fillStyle = "#000000";
-			ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
+			ctx.fillRect(
+				this.position.x,
+				this.position.y,
+				this.size.x,
+				this.size.y
+			);
 		}
 	}
 }
