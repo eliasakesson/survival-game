@@ -1,38 +1,47 @@
 import { BlockSize, ChunkSize } from "./Constants";
+import { Vector2 } from "./Constants";
+import PerlinNoise from "./PerlinNoise";
 
 interface Chunk {
 	x: number;
 	y: number;
 	blocks: Block[];
-	walkableBlocks: Block[];
+	collisionBlock: Block[];
 }
 
-interface Block {
+export interface Block {
 	x: number;
 	y: number;
+	worldX: number;
+	worldY: number;
 	type: BlockType;
 }
 
 enum BlockType {
 	Air,
+	Grass,
 	Dirt,
 	Stone,
-	Grass,
 }
 
 export default class WorldGenerator {
+	private ctx: CanvasRenderingContext2D;
 	private world: Chunk[];
+	private seed: number = Math.random() * 1e6;
 
-	constructor() {
+	constructor(ctx: CanvasRenderingContext2D) {
+		this.ctx = ctx;
 		this.world = [];
 		this.GenerateWorld();
 	}
 
-	public Update(ctx: CanvasRenderingContext2D) {
-		this.RenderWorld(ctx);
+	public Update() {
+		if (this.ctx) {
+			this.RenderWorld(this.ctx);
+		}
 	}
 
-	private GenerateWorld() {
+	public GenerateWorld() {
 		for (let chunkX = 0; chunkX < window.innerWidth; chunkX += ChunkSize) {
 			for (
 				let chunkY = 0;
@@ -43,23 +52,28 @@ export default class WorldGenerator {
 					x: chunkX,
 					y: chunkY,
 					blocks: [],
-					walkableBlocks: [],
+					collisionBlock: [],
 				};
 
 				for (let x = 0; x < ChunkSize; x += BlockSize) {
 					for (let y = 0; y < ChunkSize; y += BlockSize) {
-						const blockType = this.GetBlockType(chunk, x, y);
+						const blockType = this.GetBlockType(
+							chunk.x + x,
+							chunk.y + y
+						);
 
 						const block: Block = {
 							x: x,
 							y: y,
+							worldX: chunk.x + x,
+							worldY: chunk.y + y,
 							type: blockType,
 						};
 
 						chunk.blocks.push(block);
 
-						if (blockType === BlockType.Grass) {
-							chunk.walkableBlocks.push(block);
+						if (blockType !== BlockType.Air) {
+							chunk.collisionBlock.push(block);
 						}
 					}
 				}
@@ -73,26 +87,30 @@ export default class WorldGenerator {
 		for (const chunk of this.world) {
 			for (const block of chunk.blocks) {
 				ctx.fillStyle = this.ColorFromBlockType(block.type);
-				ctx.fillRect(
-					chunk.x + block.x,
-					chunk.y + block.y,
-					BlockSize,
-					BlockSize
-				);
+				ctx.fillRect(block.worldX, block.worldY, BlockSize, BlockSize);
 			}
 		}
 	}
 
-	public GetCloseWalkableBlocks(x: number, y: number): Block[] {
+	public GetCloseCollisionBlocks(position: Vector2): Vector2[] {
 		const chunks = this.world.filter(
 			(c) =>
-				c.x - ChunkSize <= x &&
-				c.x + ChunkSize >= x &&
-				c.y - ChunkSize <= y &&
-				c.y + ChunkSize >= y
+				c.x - ChunkSize <= position.x &&
+				c.x + ChunkSize >= position.x &&
+				c.y - ChunkSize <= position.y &&
+				c.y + ChunkSize >= position.y
 		);
 
-		return chunks.map((chunk) => chunk.walkableBlocks).flat();
+		return chunks
+			.map((chunk) =>
+				chunk.collisionBlock.map((block) => {
+					return {
+						x: block.worldX,
+						y: block.worldY,
+					};
+				})
+			)
+			.flat();
 	}
 
 	private ColorFromBlockType(type: BlockType): string {
@@ -108,55 +126,31 @@ export default class WorldGenerator {
 		}
 	}
 
-	private GetBlockType = (chunk: Chunk, x: number, y: number) => {
-		let blockAbove;
-		if (y > 0) {
-			blockAbove = chunk.blocks.find(
-				(b) => b.x === x && b.y === y - BlockSize
-			);
+	private GetBlockType = (x: number, y: number): BlockType => {
+		let noise = PerlinNoise(x / 500 + this.seed, y / 500 + this.seed);
+		noise -= 1 - y / window.innerHeight;
+		noise = Math.max(noise, -1);
+
+		if (noise < -0.5) {
+			return BlockType.Air;
+		} else if (noise < -0.3) {
+			return BlockType.Grass;
+		} else if (noise < 0) {
+			return BlockType.Dirt;
 		} else {
-			const aboveChunk = this.world.find(
-				(c) => c.x === chunk.x && c.y === chunk.y - ChunkSize
-			);
-			if (aboveChunk) {
-				blockAbove = aboveChunk.blocks.find(
-					(b) => b.x === x && b.y === ChunkSize - BlockSize
-				);
-			}
+			return BlockType.Stone;
 		}
-
-		const rand = Math.random();
-
-		if (blockAbove) {
-			if (blockAbove.type === BlockType.Grass) {
-				return BlockType.Dirt;
-			}
-			if (blockAbove.type === BlockType.Air) {
-				const airChance =
-					((window.innerHeight / 2 - y) / window.innerHeight) * 5;
-
-				if (rand < airChance) {
-					return BlockType.Air;
-				}
-
-				return BlockType.Grass;
-			}
-			if (blockAbove.type === BlockType.Dirt) {
-				const dirtChance =
-					(((window.innerHeight * 2) / 3 - y) / window.innerHeight) *
-					3;
-
-				if (rand < dirtChance) {
-					return BlockType.Dirt;
-				}
-
-				return BlockType.Stone;
-			}
-			if (blockAbove.type === BlockType.Stone) {
-				return BlockType.Stone;
-			}
-		}
-
-		return BlockType.Air;
 	};
+
+	MapValue(
+		value: number,
+		fromMin: number,
+		fromMax: number,
+		toMin: number,
+		toMax: number
+	) {
+		return (
+			((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin) + toMin
+		);
+	}
 }

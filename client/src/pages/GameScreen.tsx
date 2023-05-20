@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import FullscreenCanvas from "../components/FullscreenCanvas";
 import Game from "../../../shared/Game";
 
-function GameScreen() {
+export default function GameScreen() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [game, setGame] = useState<Game | null>(null);
 	const gameStarted = useRef(false);
@@ -19,5 +19,3 @@ function GameScreen() {
 
 	return <FullscreenCanvas ref={canvasRef}></FullscreenCanvas>;
 }
-
-export default GameScreen;

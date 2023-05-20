@@ -3,17 +3,15 @@ import Button from "../components/Button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs";
 import {
 	Card,
-	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "../components/Card";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function LoginScreen() {
+export default function LoginScreen() {
 	return (
 		<main className="h-screen flex">
 			<motion.div
@@ -27,9 +25,9 @@ function LoginScreen() {
 					</h1>
 					<p>Enter your email below to login to your account</p>
 					<br />
-					<Tabs defaultValue="signin">
+					<Tabs defaultValue="login">
 						<TabsList className="w-full mb-4">
-							<TabsTrigger value="signin" className="flex-1">
+							<TabsTrigger value="login" className="flex-1">
 								Sign In
 							</TabsTrigger>
 							<TabsTrigger value="signup" className="flex-1">
@@ -57,21 +55,48 @@ function LoginScreen() {
 	);
 }
 
-export default LoginScreen;
-
 const LoginTab = () => {
+	const [input, setInput] = useState({
+		email: "",
+		password: "",
+	});
 	const [error, setError] = useState("");
 
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+	const navigate = useNavigate();
+
+	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		setError("Invalid email or password");
+		await fetch("http://localhost:8080/v1/login", {
+			method: "POST",
+			body: JSON.stringify(input),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((response) =>
+				response
+					.json()
+					.then((data) => {
+						if (data.status === "success") {
+							navigate("/home");
+						} else {
+							setError(data.message);
+						}
+					})
+					.catch((err) => {
+						setError(err.message);
+					})
+			)
+			.catch((err) => {
+				setError(err.message);
+			});
 	}
 
 	return (
 		<TabContent
-			value="signin"
-			title="Sign in"
+			value="login"
+			title="Log in"
 			description="Enter your email and password to login"
 			onSubmit={handleSubmit}
 			errorMessage={error}>
@@ -82,7 +107,10 @@ const LoginTab = () => {
 				<Input
 					id="email"
 					type="email"
-					name="email"
+					value={input.email}
+					onChange={(e) =>
+						setInput({ ...input, email: e.target.value })
+					}
 					placeholder="Email Address"
 					className={error ? "border-red-500" : ""}
 				/>
@@ -94,7 +122,10 @@ const LoginTab = () => {
 				<Input
 					id="password"
 					type="password"
-					name="password"
+					value={input.password}
+					onChange={(e) =>
+						setInput({ ...input, password: e.target.value })
+					}
 					placeholder="Password"
 					className={error ? "border-red-500" : ""}
 				/>
@@ -104,12 +135,42 @@ const LoginTab = () => {
 };
 
 const SignupTab = () => {
+	const [input, setInput] = useState({
+		username: "",
+		email: "",
+		password: "",
+	});
 	const [error, setError] = useState("");
 
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+	const navigate = useNavigate();
+
+	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		setError("Invalid email or password");
+		await fetch("http://localhost:8080/v1/users", {
+			method: "POST",
+			body: JSON.stringify(input),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((response) =>
+				response
+					.json()
+					.then((data) => {
+						if (data.status === "success") {
+							navigate("/home");
+						} else {
+							setError(data.message);
+						}
+					})
+					.catch((err) => {
+						setError(err.message);
+					})
+			)
+			.catch((err) => {
+				setError(err.message);
+			});
 	}
 
 	return (
@@ -120,13 +181,31 @@ const SignupTab = () => {
 			onSubmit={handleSubmit}
 			errorMessage={error}>
 			<div className="space-y-1">
+				<label htmlFor="username" className="text-sm text-zinc-500">
+					Username
+				</label>
+				<Input
+					id="username"
+					type="username"
+					value={input.username}
+					onChange={(e) =>
+						setInput({ ...input, username: e.target.value })
+					}
+					placeholder="Username"
+					className={error ? "border-red-500" : ""}
+				/>
+			</div>
+			<div className="space-y-1">
 				<label htmlFor="email" className="text-sm text-zinc-500">
 					Email Address
 				</label>
 				<Input
 					id="email"
 					type="email"
-					name="email"
+					value={input.email}
+					onChange={(e) =>
+						setInput({ ...input, email: e.target.value })
+					}
 					placeholder="Email Address"
 					className={error ? "border-red-500" : ""}
 				/>
@@ -138,19 +217,10 @@ const SignupTab = () => {
 				<Input
 					id="password"
 					type="password"
-					name="password"
-					placeholder="Password"
-					className={error ? "border-red-500" : ""}
-				/>
-			</div>
-			<div className="space-y-1">
-				<label htmlFor="password2" className="text-sm text-zinc-500">
-					Repeat Password
-				</label>
-				<Input
-					id="password2"
-					type="password"
-					name="password2"
+					value={input.password}
+					onChange={(e) =>
+						setInput({ ...input, password: e.target.value })
+					}
 					placeholder="Password"
 					className={error ? "border-red-500" : ""}
 				/>
