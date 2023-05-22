@@ -6,7 +6,7 @@ export interface Room {
     worldSettings: { seed: number }
 }
 
-export class SocketHandler {
+export default class SocketHandler {
     private io: Server;
     private rooms: Room[] = [];
 

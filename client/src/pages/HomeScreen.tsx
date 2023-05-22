@@ -6,8 +6,15 @@ import {
 	CardTitle,
 } from "../components/Card";
 import { HiUser, HiUserGroup } from "react-icons/hi";
+import { SocketClient } from "../classes/SocketClient";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function HomeScreen() {
+
+	const navigate = useNavigate();
+	const [socketClient] = useState<SocketClient>(new SocketClient(navigate));
+
 	return (
 		<main className="h-screen flex-1 flex flex-col justify-center items-center p-4 lg:p-32">
 			<h1 className="text-6xl font-mono font-extrabold">Survival Game</h1>
@@ -28,7 +35,7 @@ export default function HomeScreen() {
 						</CardHeader>
 					</Card>
 				</Link>
-				<button>
+				<button onClick={() => socketClient.JoinRoom("sup")}>
 					<Card>
 						<CardHeader className="flex flex-col items-start gap-2">
 							<HiUserGroup className="text-6xl text-blue-500" />

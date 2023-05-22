@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 //import * as Database from "./Database"
 import * as path from "path";
 import cors from "cors";
+import SocketHandler from "./SocketHandler";
 
 //import { Gravity } from "../../shared/Constants"
 //console.log(Gravity)
@@ -33,15 +34,4 @@ const io = new Server(httpServer, {
     }
 });
 
-io.on("connection", (socket) => {
-    console.log("A user connected")
-
-    socket.on("message", (data) => {
-        console.log("Received message:", data)
-        io.emit("message", data) // Broadcast the message to all connected clients
-    })
-
-    socket.on("disconnect", () => {
-        console.log("A user disconnected")
-    })
-})
+const socketHandler = new SocketHandler(io);
