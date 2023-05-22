@@ -12,10 +12,14 @@ export default class Game {
 		console.log("Game started");
 
 		this.ctx = ctx;
-		this.world = new WorldGenerator();
+		this.world = new WorldGenerator(ctx);
 		this.player = new Player(ctx);
 
 		requestAnimationFrame(this.Update.bind(this));
+
+		setInterval(() => {
+			this.world.GenerateWorld();
+		}, 1000);
 	}
 
 	public Update(time: number) {
@@ -24,8 +28,11 @@ export default class Game {
 
 		this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-		this.world.Update(this.ctx);
+		this.world.Update();
 		this.player.Update(deltaTime);
+		this.player.HandleCollisions(
+			this.world.GetCloseCollisionBlocks(this.player.position)
+		);
 
 		requestAnimationFrame(this.Update.bind(this));
 	}

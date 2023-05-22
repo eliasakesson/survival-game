@@ -30,7 +30,8 @@ export default class Player extends PhysicsObject {
 			this.velocity.x = 0;
 		}
 
-		if (this.inputManager.IsKeyDown("Jump")) {
+		if (this.grounded && this.inputManager.IsKeyDown("Jump")) {
+			this.grounded = false;
 			this.AddForce({ x: 0, y: -this.jumpForce });
 		}
 	}

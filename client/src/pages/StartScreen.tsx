@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import FullscreenCanvas from "../components/FullscreenCanvas";
 import WorldGenerator from "../../../shared/WorldGenerator";
 
-function StartScreen() {
+export default function StartScreen() {
 	const [worldGenerator, setWorldGenerator] = useState<WorldGenerator | null>(
 		null
 	);
@@ -16,7 +16,7 @@ function StartScreen() {
 	useEffect(() => {
 		const timeout = setTimeout(() => {
 			document.addEventListener("keydown", () => {
-				navigate("/signin");
+				navigate("/login");
 			});
 		}, 2000);
 
@@ -24,8 +24,8 @@ function StartScreen() {
 			const ctx = canvasRef.current.getContext("2d");
 			if (ctx) {
 				console.log("Creating world");
-				const worldGenerator = new WorldGenerator();
-				worldGenerator.Update(ctx);
+				const worldGenerator = new WorldGenerator(ctx);
+				worldGenerator.Update();
 				setWorldGenerator(worldGenerator);
 				worldExists.current = true;
 			}
@@ -35,15 +35,18 @@ function StartScreen() {
 	}, []);
 
 	useEffect(() => {
-		window.addEventListener("resize", () => {
-			if (canvasRef.current && worldGenerator) {
-				const ctx = canvasRef.current.getContext("2d");
-				if (ctx) {
-					worldGenerator.Update(ctx);
-				}
-			}
-		});
+		if (worldGenerator) {
+			requestAnimationFrame(Update);
+		}
 	}, [worldGenerator]);
+
+	function Update(time: number) {
+		// if (worldGenerator) {
+		// 	worldGenerator.GenerateWorld();
+		// 	worldGenerator.Update();
+		// 	requestAnimationFrame(Update);
+		// }
+	}
 
 	return (
 		<main className="">
@@ -71,7 +74,7 @@ function StartScreen() {
 					transition={{ delay: 2.5, duration: 1 }}
 					className="mt-[40vh]">
 					<Link
-						to="/signin"
+						to="/login"
 						className="text-xl lg:text-3xl font-serif text-muted text-zinc-700">
 						Press any key to continue
 					</Link>
@@ -80,5 +83,3 @@ function StartScreen() {
 		</main>
 	);
 }
-
-export default StartScreen;

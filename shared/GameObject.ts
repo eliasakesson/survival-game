@@ -1,10 +1,11 @@
 import { BlockSize } from "./Constants";
+import { Vector2 } from "./Constants";
 
 export default class GameObject {
-	ctx: CanvasRenderingContext2D;
-	position: any;
-	size: any;
-	sprite: any;
+	private ctx: CanvasRenderingContext2D;
+	public position: Vector2;
+	protected size: Vector2;
+	private sprite: any;
 
 	constructor(ctx: CanvasRenderingContext2D) {
 		this.ctx = ctx;
