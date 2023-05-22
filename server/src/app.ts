@@ -22,24 +22,26 @@ app.post("/post_name", (req, res) => {
 	console.log(req.body);
 });
 
-app.listen(port, () => {
+const httpServer = app.listen(port, () => {
 	console.log(`Server running on port ${port}`);
 });
 
-/* Socket
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
 io.on("connection", (socket) => {
-	console.log("A user connected")
+    console.log("A user connected")
 
-	socket.on("message", (data) => {
-		console.log("Received message:", data)
-		io.emit("message", data) // Broadcast the message to all connected clients
-	})
+    socket.on("message", (data) => {
+        console.log("Received message:", data)
+        io.emit("message", data) // Broadcast the message to all connected clients
+    })
 
-	socket.on("disconnect", () => {
-		console.log("A user disconnected")
-	})
+    socket.on("disconnect", () => {
+        console.log("A user disconnected")
+    })
 })
-
-console.warn(`Random UUID: ${Database.GenerateUUID()}`)
-console.log(Database.GetUserData("EHGMQU"))
-*/

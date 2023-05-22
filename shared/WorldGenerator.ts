@@ -108,53 +108,75 @@ export default class WorldGenerator {
 		}
 	}
 
-	private GetBlockType = (chunk: Chunk, x: number, y: number) => {
-		let blockAbove;
-		if (y > 0) {
-			blockAbove = chunk.blocks.find(
-				(b) => b.x === x && b.y === y - BlockSize
+	private GetBlocksAround(
+		x: number,
+		y: number
+	): {
+		left: Block | undefined;
+		above: Block | undefined;
+		leftUnder: Block | undefined;
+	} {
+		const aboveBlockChunk = this.world.find(
+			(c) =>
+				c.x - ChunkSize <= x &&
+				c.x + ChunkSize >= x &&
+				c.y - ChunkSize <= y + BlockSize &&
+				c.y + ChunkSize >= y + BlockSize
+		);
+
+		let aboveBlock;
+		if (aboveBlockChunk) {
+			aboveBlock = aboveBlockChunk.blocks.find(
+				(b) => b.x === x && b.y === y + BlockSize
 			);
-		} else {
-			const aboveChunk = this.world.find(
-				(c) => c.x === chunk.x && c.y === chunk.y - ChunkSize
-			);
-			if (aboveChunk) {
-				blockAbove = aboveChunk.blocks.find(
-					(b) => b.x === x && b.y === ChunkSize - BlockSize
-				);
-			}
 		}
 
-		const rand = Math.random();
+		const leftBlockChunk = this.world.find(
+			(c) =>
+				c.x - ChunkSize <= x - BlockSize &&
+				c.x + ChunkSize >= x - BlockSize &&
+				c.y - ChunkSize <= y &&
+				c.y + ChunkSize >= y
+		);
 
-		if (blockAbove) {
-			if (blockAbove.type === BlockType.Grass) {
-				return BlockType.Dirt;
-			}
-			if (blockAbove.type === BlockType.Air) {
-				const airChance =
-					((window.innerHeight / 2 - y) / window.innerHeight) * 5;
+		let leftBlock;
+		if (leftBlockChunk) {
+			leftBlock = leftBlockChunk.blocks.find(
+				(b) => b.x === x - BlockSize && b.y === y
+			);
+		}
 
-				if (rand < airChance) {
-					return BlockType.Air;
-				}
+		const leftUnderBlockChunk = this.world.find(
+			(c) =>
+				c.x - ChunkSize <= x - BlockSize &&
+				c.x + ChunkSize >= x - BlockSize &&
+				c.y - ChunkSize <= y + BlockSize &&
+				c.y + ChunkSize >= y + BlockSize
+		);
 
-				return BlockType.Grass;
-			}
-			if (blockAbove.type === BlockType.Dirt) {
-				const dirtChance =
-					(((window.innerHeight * 2) / 3 - y) / window.innerHeight) *
-					3;
+		let leftUnderBlock;
+		if (leftUnderBlockChunk) {
+			leftUnderBlock = leftUnderBlockChunk.blocks.find(
+				(b) => b.x === x - BlockSize && b.y === y + BlockSize
+			);
+		}
 
-				if (rand < dirtChance) {
-					return BlockType.Dirt;
-				}
+		return {
+			left: leftBlock,
+			above: aboveBlock,
+			leftUnder: leftUnderBlock,
+		};
+	}
 
-				return BlockType.Stone;
-			}
-			if (blockAbove.type === BlockType.Stone) {
-				return BlockType.Stone;
-			}
+	private GetBlockType = (chunk: Chunk, x: number, y: number) => {
+		const { left, above, leftUnder } = this.GetBlocksAround(
+			chunk.x + x,
+			chunk.y + y
+		);
+		console.log(left, above, leftUnder);
+
+		if (chunk.y + y > window.innerHeight / 2) {
+			return BlockType.Grass;
 		}
 
 		return BlockType.Air;
