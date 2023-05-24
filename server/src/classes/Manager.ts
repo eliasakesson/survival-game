@@ -35,6 +35,21 @@ export function start(io: SocketServer) {
 			return;
 		});
 
+		socket.on("getServerList", (callback) => {
+			const serverList = [];
+
+			for (const server of servers) {
+				serverList.push({
+					name: server.name,
+					uuid: server.uuid,
+					playerCount: server.players.length,
+				});
+			}
+
+			callback(serverList);
+			return;
+		});
+
 		socket.on("disconnect", () => {
 			console.log(`Client ${socket.id} disconnected`);
 

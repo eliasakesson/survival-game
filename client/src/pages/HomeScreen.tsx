@@ -1,32 +1,13 @@
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
-import { Card, CardDescription, CardHeader, CardTitle } from "../components/Card";
-import { HiUser, HiUserGroup } from "react-icons/hi";
-//import { SocketClient } from "../classes/SocketClient";
-//import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import * as ClientManager from "../game/ClientManager";
-
-export default function HomeScreen() {
-	const navigate = useNavigate();
-	//const [socketClient] = useState<SocketClient>(new SocketClient(navigate));
-
-=======
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "../components/Card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/Card";
 import { HiUser, HiUserGroup } from "react-icons/hi";
 import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { JoinRoom } from "../classes/SocketClient";
+//import { JoinRoom } from "../classes/SocketClient";
+import * as ClientManager from "../game/ClientManager";
 
 export default function HomeScreen() {
->>>>>>> 3088ae8d3df3a442258be6b492a4b388c064adf3
 	return (
 		<main className="h-screen flex-1 flex flex-col justify-center items-center p-4 lg:p-32">
 			<h1 className="text-6xl font-mono font-extrabold">Survival Game</h1>
@@ -41,21 +22,8 @@ export default function HomeScreen() {
 						</CardHeader>
 					</Card>
 				</Link>
-<<<<<<< HEAD
-				<button onClick={() => ClientManager.JoinServer("server-uuid")}>
-					<Card>
-						<CardHeader className="flex flex-col items-start gap-2">
-							<HiUserGroup className="text-6xl text-blue-500" />
-							<CardTitle className="font-mono">Join server</CardTitle>
-							<CardDescription>Join a server with your friends</CardDescription>
-						</CardHeader>
-					</Card>
-				</button>
-				<button onClick={() => ClientManager.CreateServer("server-uuid")}>
-=======
 				<ServerList />
-				<button>
->>>>>>> 3088ae8d3df3a442258be6b492a4b388c064adf3
+				<button onClick={() => ClientManager.CreateServer("server-uuid")}>
 					<Card>
 						<CardHeader className="flex flex-col items-start gap-2">
 							<HiUserGroup className="text-6xl text-blue-500" />
@@ -70,31 +38,26 @@ export default function HomeScreen() {
 }
 
 const ServerList = () => {
-
 	const [serverListOpen, setServerListOpen] = useState<boolean>(false);
 
 	return (
 		<>
-			<button onClick={() => setServerListOpen(open => !open)}>
+			<button onClick={() => setServerListOpen((open) => !open)}>
 				<Card>
 					<CardHeader className="flex flex-col items-start gap-2">
 						<HiUserGroup className="text-6xl text-blue-500" />
-						<CardTitle className="font-mono">
-							Join server
-						</CardTitle>
-						<CardDescription>
-							Join a server with your friends
-						</CardDescription>
+						<CardTitle className="font-mono">Join server</CardTitle>
+						<CardDescription>Join a server with your friends</CardDescription>
 					</CardHeader>
 				</Card>
 			</button>
 			{serverListOpen && <ServerListModal closeModal={() => setServerListOpen(false)} />}
 		</>
-	)
-}
+	);
+};
 
-const ServerListModal = ({ closeModal } : { closeModal: () => void}) => {
-	return ( 
+const ServerListModal = ({ closeModal }: { closeModal: () => void }) => {
+	return (
 		<Card className="max-w-[80vw] w-[50vh] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white">
 			<CardHeader>
 				<div className="flex justify-between">
@@ -110,19 +73,19 @@ const ServerListModal = ({ closeModal } : { closeModal: () => void}) => {
 				</ul>
 			</CardContent>
 		</Card>
-	)
-}
+	);
+};
 
-const ServerListItem = ({ name, playerCount } : { name: string, playerCount: number }) => {
-
-	const navigate = useNavigate();
-
+const ServerListItem = ({ name, playerCount }: { name: string; playerCount: number }) => {
 	return (
 		<li>
-			<button onClick={() => JoinRoom(navigate, name)} className="w-full flex justify-between items-center border border-gray-300 px-8 py-4 rounded">
+			<button
+				onClick={() => ClientManager.JoinServer(name)}
+				className="w-full flex justify-between items-center border border-gray-300 px-8 py-4 rounded"
+			>
 				<h4 className="font-semibold">{name}</h4>
 				<p>{playerCount} / 10 players</p>
 			</button>
 		</li>
-	)
-}
+	);
+};

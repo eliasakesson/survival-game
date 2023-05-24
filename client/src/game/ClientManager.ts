@@ -15,10 +15,22 @@ export function JoinServer(uuid: string) {
 	});
 }
 
-export function CreateServer(uuid: string) {
+export async function CreateServer(uuid: string) {
 	socket.emit("createServer", uuid, (res: any) => {
 		if (res == true) {
 			JoinServer(uuid);
 		}
+	});
+
+	// FOR TESTING
+	const serverList = await GetServerList();
+	console.log(serverList);
+}
+
+export function GetServerList() {
+	return new Promise((resolve) => {
+		socket.emit("getServerList", (serverList: any) => {
+			resolve(serverList);
+		});
 	});
 }
