@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 //import * as Database from "./Database"
 import * as path from "path";
 import cors from "cors";
-import SocketHandler from "./SocketHandler";
+import * as ServerHandler from "./classes/Manager";
 
 //import { Gravity } from "../../shared/Constants"
 //console.log(Gravity)
@@ -28,10 +28,10 @@ const httpServer = app.listen(port, () => {
 });
 
 const io = new Server(httpServer, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
+	cors: {
+		origin: "*",
+		methods: ["GET", "POST"],
+	},
 });
 
-const socketHandler = new SocketHandler(io);
+ServerHandler.start(io);

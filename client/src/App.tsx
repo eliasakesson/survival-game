@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { StartScreen, LoginScreen, GameScreen } from "./pages";
 import HomeScreen from "./pages/HomeScreen";
 
+import * as ClientManager from "./game/ClientManager";
+
 function App() {
 	return (
 		<BrowserRouter>
