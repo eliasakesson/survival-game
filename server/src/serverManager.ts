@@ -1,5 +1,5 @@
 import { Server as SocketServer, Socket } from "socket.io";
-import { GameServer, Server } from "./GameServer";
+import { GameServer, Server } from "./classes/GameServer";
 
 const servers: Server[] = [];
 
@@ -63,3 +63,15 @@ export function start(io: SocketServer) {
 		});
 	});
 }
+
+function tickServers() {
+	const timeNow = new Date().getTime();
+	servers.forEach((server) => {
+		const timePassed = timeNow - server.lastTick;
+		if (timePassed > 1 / 20) {
+			server.lastTick = timeNow;
+			server.tick(timePassed);
+		}
+	});
+}
+setInterval(tickServers, 1);

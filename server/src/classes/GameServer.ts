@@ -1,11 +1,17 @@
 import { Server as SocketServer, Socket } from "socket.io";
 import { GamePlayer, Player } from "./Player";
 
+import { World, WorldType } from "./World";
+import { Chunk, ChunkType } from "./Chunk";
+import { Block, BlockType } from "./Block";
+
 export class GameServer {
 	name: string;
 	uuid: string;
 	seed: number;
 	players: Player[];
+	worlds: WorldType[];
+	lastTick: number;
 
 	constructor(uuid: string) {
 		// TODO: get saved world information from database
@@ -23,6 +29,17 @@ export class GameServer {
 		this.uuid = uuid;
 		this.seed = worldData.seed;
 		this.players = [];
+		this.lastTick = new Date().getTime();
+
+		this.worlds = [];
+		const overworld = new World("overworld");
+		this.worlds.push(overworld);
+	}
+
+	tick(deltaTime: number) {
+		//console.log(`Server ${this.name} ticked!`);
+
+		this.worlds.forEach((world) => world.tick());
 	}
 
 	/*
@@ -41,7 +58,7 @@ export class GameServer {
 
 		socket.join(this.uuid);
 
-		console.warn(`Player ${player.name} successfully joined: ${this.name}`);
+		console.warn(`Player ${player.name} joined: ${this.name}`);
 	}
 
 	/*
@@ -55,7 +72,7 @@ export class GameServer {
 		this.players.splice(index, 1);
 		player.cleanup();
 
-		console.warn(`Player ${player.name} successfully left: ${this.name}`);
+		console.warn(`Player ${player.name} left: ${this.name}`);
 	}
 }
 

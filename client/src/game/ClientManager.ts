@@ -1,4 +1,4 @@
-import { NavigateFunction } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { Socket } from "socket.io-client";
 
@@ -12,6 +12,8 @@ socket.on("connect", () => {
 export function JoinServer(uuid: string) {
 	socket.emit("joinServer", uuid, (res: any) => {
 		console.warn(res);
+		window.location.replace("/game");
+		console.log(window.location);
 	});
 }
 

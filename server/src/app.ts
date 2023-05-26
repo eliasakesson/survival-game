@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 //import * as Database from "./Database"
 import * as path from "path";
 import cors from "cors";
-import * as ServerHandler from "./classes/Manager";
+import * as ServerManager from "./serverManager";
 
 //import { Gravity } from "../../shared/Constants"
 //console.log(Gravity)
@@ -34,4 +34,4 @@ const io = new Server(httpServer, {
 	},
 });
 
-ServerHandler.start(io);
+ServerManager.start(io);
