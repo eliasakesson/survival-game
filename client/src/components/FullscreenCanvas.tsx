@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 interface CanvasProps extends React.CanvasHTMLAttributes<HTMLCanvasElement> {}
 
+/* prettier-ignore */
 const FullscreenCanvas = React.forwardRef(
 	(props: CanvasProps, ref: React.Ref<HTMLCanvasElement>) => {
 		const [windowSize, setWindowSize] = useState({
@@ -27,7 +28,8 @@ const FullscreenCanvas = React.forwardRef(
 				ref={ref}
 				id="canvas"
 				width={windowSize.width}
-				height={windowSize.height}></canvas>
+				height={windowSize.height}>
+			</canvas>
 		);
 	}
 );

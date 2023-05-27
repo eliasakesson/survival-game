@@ -3,8 +3,8 @@ import { StartScreen, LoginScreen, GameScreen } from "../pages";
 import HomeScreen from "../pages/HomeScreen";
 import { AuthProvider } from "../contexts/AuthContext";
 import { GameProvider } from "../contexts/GameContext";
-//import * as ClientManager from "../game/ClientManager";
 import { Protected, RouteEnum } from "./ProtectedRoute";
+import NotFoundPage from "../pages/NotFoundError";
 
 function App() {
 	return (
@@ -33,6 +33,8 @@ function App() {
 								</Protected>
 							}
 						/>
+
+						<Route path="*" element={<NotFoundPage />} />
 					</Routes>
 				</Router>
 			</AuthProvider>

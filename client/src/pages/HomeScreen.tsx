@@ -5,9 +5,11 @@ import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 //import { JoinRoom } from "../classes/SocketClient";
-import * as ClientManager from "../game/ClientManager";
+import { useGame } from "../contexts/GameContext";
 
 export default function HomeScreen() {
+	const { JoinServer } = useGame();
+
 	return (
 		<main className="h-screen flex-1 flex flex-col justify-center items-center p-4 lg:p-32">
 			<h1 className="text-6xl font-mono font-extrabold">Survival Game</h1>
@@ -23,7 +25,7 @@ export default function HomeScreen() {
 					</Card>
 				</Link>
 				<ServerList />
-				<button onClick={() => ClientManager.CreateServer("server-uuid")}>
+				<button onClick={() => JoinServer("server-uuid")}>
 					<Card>
 						<CardHeader className="flex flex-col items-start gap-2">
 							<HiUserGroup className="text-6xl text-blue-500" />
@@ -80,7 +82,7 @@ const ServerListItem = ({ name, playerCount }: { name: string; playerCount: numb
 	return (
 		<li>
 			<button
-				onClick={() => ClientManager.JoinServer(name)}
+				//onClick={() => ClientManager.JoinServer(name)}
 				className="w-full flex justify-between items-center border border-gray-300 px-8 py-4 rounded"
 			>
 				<h4 className="font-semibold">{name}</h4>

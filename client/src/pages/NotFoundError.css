@@ -1,0 +1,32 @@
+#nopagefound {
+	width: 100vw;
+	height: 100vh;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+}
+
+#nopagefound h1 {
+	color: rgb(255, 74, 74);
+	font-size: 4vh;
+}
+
+#nopagefound p {
+	color: rgb(155, 155, 155);
+	font-size: 2vh;
+}
+
+#nopagefound button {
+	margin-top: 2vh;
+	color: white;
+	background-color: rgb(255, 74, 74);
+	font-size: 1.7vh;
+	border-radius: 2vh;
+	padding: 0.3vh 2vh;
+	transition: transform 0.2s;
+}
+
+#nopagefound button:hover {
+	transform: scale(1.05);
+}
