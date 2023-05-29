@@ -10,6 +10,7 @@ import {
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function LoginScreen() {
 	return (
@@ -61,33 +62,16 @@ const LoginTab = () => {
 		password: "",
 	});
 	const [error, setError] = useState("");
-
+	const { login } = useAuth();
 	const navigate = useNavigate();
 
-	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		await fetch("http://localhost:8080/v1/login", {
-			method: "POST",
-			body: JSON.stringify(input),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-			.then((response) =>
-				response
-					.json()
-					.then((data) => {
-						if (data.status === "success") {
-							navigate("/home");
-						} else {
-							setError(data.message);
-						}
-					})
-					.catch((err) => {
-						setError(err.message);
-					})
-			)
+		login(input.email, input.password)
+			.then(() => {
+				navigate("/home");
+			})
 			.catch((err) => {
 				setError(err.message);
 			});
@@ -141,33 +125,16 @@ const SignupTab = () => {
 		password: "",
 	});
 	const [error, setError] = useState("");
-
+	const { signup } = useAuth();
 	const navigate = useNavigate();
 
-	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		await fetch("http://localhost:8080/v1/users", {
-			method: "POST",
-			body: JSON.stringify(input),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-			.then((response) =>
-				response
-					.json()
-					.then((data) => {
-						if (data.status === "success") {
-							navigate("/home");
-						} else {
-							setError(data.message);
-						}
-					})
-					.catch((err) => {
-						setError(err.message);
-					})
-			)
+		signup(input.username, input.email, input.password)
+			.then(() => {
+				navigate("/home");
+			})
 			.catch((err) => {
 				setError(err.message);
 			});
